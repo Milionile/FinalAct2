@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library System - Admin Dashboard</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/dashboard.css">
+
+</head>
+<body>
+  <div class="container-fluid p-0">
+    <div class="row g-0">
+      <!-- Sidebar -->
+      <nav id="sidebarMenu" class="sidebar d-md-block collapse">
+        <div class="sidebar-sticky">
+          <div class="text-center mb-4 px-3">
+            <div class="d-flex align-items-center justify-content-center mb-2">
+              <i class="fas fa-book text-white fs-3 me-2"></i>
+              <h5 class="text-white mb-0">Library System</h5>
+            </div>
+            <small class="text-white-50">Admin Dashboard</small>
+          </div>
+          
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="#" onclick="showSection('dashboard')">
+              <i class="fas fa-tachometer-alt"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-section="books" onclick="showSection('books')">
+                <i class="fas fa-book"></i> Books Module
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-section="acquisition" onclick="showSection('acquisition')">
+                <i class="fas fa-plus-circle"></i>
+                Acquisition Module
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-section="transaction" onclick="showSection('transaction')">
+                <i class="fas fa-exchange-alt"></i>
+                Transaction Module
+              </a>
+            </li>
+            <li class="nav-item mt-4">
+              <a class="nav-link text-danger" href="#" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Top Navigation -->
+        <nav class="navbar navbar-expand-lg top-navbar py-3">
+          <div class="container-fluid">
+            <button class="navbar-toggler d-md-none" type="button" onclick="toggleSidebar()">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="d-flex flex-grow-1 me-4">
+              <div class="input-group" style="max-width: 400px;">
+                <span class="input-group-text bg-white border-end-0">
+                  <i class="fas fa-search text-muted"></i>
+                </span>
+                <input type="text" class="form-control border-start-0" placeholder="Search books, members, transactions..." id="searchInput">
+              </div>
+            </div>
+            <ul class="navbar-nav ms-auto">
+              
+                <a class="nav-link" href="#" onclick="showSection('reports')">
+                  <i class="fas fa-chart-line"></i> Reports
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('members')">
+                  <i class="fas fa-users"></i> Members
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('settings')">
+                  <i class="fas fa-cog"></i> Settings
+                </a>
+              </li>
+              <li class="nav-item dropdown me-3">
+                <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown">
+                  <i class="fas fa-bell fs-5"></i>
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6em;" id="notificationCount">
+                    5
+                  </span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" id="notificationDropdown">
+                  <li><h6 class="dropdown-header">Notifications</h6></li>
+                  <li><a class="dropdown-item" href="#"><i class="fas fa-exclamation-triangle text-warning me-2"></i>3 books overdue</a></li>
+                  <li><a class="dropdown-item" href="#"><i class="fas fa-user-plus text-info me-2"></i>New member registered</a></li>
+                  <li><a class="dropdown-item" href="#"><i class="fas fa-book text-success me-2"></i>New book acquired</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item text-center" href="#" onclick="clearNotifications()">Clear all</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                  <div class="user-avatar me-2">
+                    <span>LA</span>
+                  </div>
+                  <span class="d-none d-sm-inline">Librarian Admin</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+                  <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+            </ul>
+            
+          </div>
+        </nav>
+        
+        <!-- Page Content -->
+        <div id="pageContent">
+          <!-- Dashboard Content -->
+          <div id="dashboardSection" class="content-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2 class="text-dark">Library Dashboard</h2>
+              <div>
+                <button class="btn btn-outline-secondary me-2" onclick="exportReport()">
+                  <i class="fas fa-download me-1"></i> Export Report
+                </button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#quickAddModal">
+                  <i class="fas fa-plus me-1"></i> Quick Add
+                </button>
+              </div>
+            </div>
+            
+            <!-- Stats Row -->
+            <div class="row">
+              <div class="col-md-6 col-xl-3 mb-4">
+                <div class="card stat-card books">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted mb-1">Total Books</h6>
+                        <h3 class="mb-0" id="totalBooks">15,847</h3>
+                        <div><small class="text-success"><i class="fas fa-arrow-up me-1"></i>2.5%</small> this month</div>
+                      </div>
+                      <div class="stat-icon books">
+                        <i class="fas fa-book"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6 col-xl-3 mb-4">
+                <div class="card stat-card acquisition">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted mb-1">New Acquisitions</h6>
+                        <h3 class="mb-0" id="newAcquisitions">124</h3>
+                        <div><small class="text-success"><i class="fas fa-arrow-up me-1"></i>18.2%</small> this month</div>
+                      </div>
+                      <div class="stat-icon acquisition">
+                        <i class="fas fa-plus-circle"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6 col-xl-3 mb-4">
+                <div class="card stat-card transaction">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted mb-1">Active Loans</h6>
+                        <h3 class="mb-0" id="activeLoans">892</h3>
+                        <div><small class="text-info"><i class="fas fa-minus me-1"></i>4.3%</small> vs last week</div>
+                      </div>
+                      <div class="stat-icon transaction">
+                        <i class="fas fa-exchange-alt"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6 col-xl-3 mb-4">
+                <div class="card stat-card overdue">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted mb-1">Overdue Books</h6>
+                        <h3 class="mb-0" id="overdueBooks">34</h3>
+                        <div><small class="text-success"><i class="fas fa-arrow-down me-1"></i>12.1%</small> vs last week</div>
+                      </div>
+                      <div class="stat-icon overdue">
+                        <i class="fas fa-exclamation-triangle"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Charts and Calendar Row -->
+            <div class="row">
+              <div class="col-lg-8 mb-4">
+                <div class="card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Library Activity Overview</h5>
+                    <div class="dropdown">
+                      <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        This Month
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#" onclick="updateChart('today')">Today</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateChart('week')">This Week</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateChart('month')">This Month</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateChart('lastMonth')">Last Month</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container" style="height: 300px; position: relative;">
+                      <div class="d-flex align-items-center justify-content-center bg-light" style="height: 100%; border-radius: 0.25rem;">
+                        <div class="text-center">
+                          <i class="fas fa-chart-line text-muted fs-1 mb-3"></i>
+                          <p class="text-muted">Borrowing & Return Activity Chart</p>
+                          <small class="text-muted">Chart will be updated based on selected period</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-4 mb-4">
+                <div class="calendar-container">
+                  <div class="calendar-header">
+                    <h5 class="mb-0" id="calendarMonth">May 2025</h5>
+                    <div>
+                      <button class="btn btn-sm btn-outline-secondary me-1" onclick="previousMonth()">
+                        <i class="fas fa-chevron-left"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-secondary" onclick="nextMonth()">
+                        <i class="fas fa-chevron-right"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar will be generated by JavaScript -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Recent Transactions Table -->
+            <div class="row">
+              <div class="col-12 mb-4">
+                <div class="card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Recent Transactions</h5>
+                    <a href="#" class="btn btn-sm btn-link" onclick="showSection('transaction')">View All</a>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="recentTransactionsTable">
+                        <thead>
+                          <tr>
+                            <th>Transaction ID</th>
+                            <th>Member</th>
+                            <th>Book Title</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody id="transactionTableBody">
+                          <!-- Transactions will be populated by JavaScript -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Books Module Content -->
+          <div id="booksSection" class="content-section" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2 class="text-dark">Books Management</h2>
+              <div>
+                <button class="btn btn-outline-secondary me-2" onclick="exportBooks()">
+                  <i class="fas fa-download me-1"></i> Export
+                </button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookModal">
+                  <i class="fas fa-plus me-1"></i> Add New Book
+                </button>
+              </div>
+            </div>
+            
+            <!-- Books Search and Filter -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-search"></i></span>
+                  <input type="text" class="form-control" placeholder="Search books..." id="booksSearch">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <select class="form-select" id="categoryFilter">
+                  <option value="">All Categories</option>
+                  <option value="Fiction">Fiction</option>
+                  <option value="Non-Fiction">Non-Fiction</option>
+                  <option value="Science">Science</option>
+                  <option value="History">History</option>
+                  <option value="Biography">Biography</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <select class="form-select" id="statusFilter">
+                  <option value="">All Status</option>
+                  <option value="Available">Available</option>
+                  <option value="Borrowed">Borrowed</option>
+                  <option value="Reserved">Reserved</option>
+                  <option value="Maintenance">Maintenance</option>
+                </select>
+              </div>
+            </div>
+            
+            <!-- Books Table -->
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover" id="booksTable">
+                    <thead>
+                      <tr>
+                        <th>ISBN</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Location</th>
+                        <th>Added Date</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="booksTableBody">
+                      <!-- Books will be populated by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acquisition Module Content -->
+          <div id="acquisitionSection" class="content-section" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2 class="text-dark">Acquisition Management</h2>
+              <div>
+                <button class="btn btn-outline-secondary me-2" onclick="exportAcquisitions()">
+                  <i class="fas fa-download me-1"></i> Export
+                </button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newAcquisitionModal">
+                  <i class="fas fa-plus me-1"></i> New Acquisition Request
+                </button>
+              </div>
+            </div>
+            
+            <!-- Acquisition Stats -->
+            <div class="row mb-4">
+              <div class="col-md-3">
+                <div class="card text-center">
+                  <div class="card-body">
+                    <h3 class="text-primary">42</h3>
+                    <p class="mb-0">Pending Requests</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card text-center">
+                  <div class="card-body">
+                    <h3 class="text-success">156</h3>
+                    <p class="mb-0">Approved</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card text-center">
+                  <div class="card-body">
+                    <h3 class="text-info">89</h3>
+                    <p class="mb-0">Ordered</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card text-center">
+                  <div class="card-body">
+                    <h3 class="text-warning">23</h3>
+                    <p class="mb-0">Received</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Acquisition Requests Table -->
+            <div class="card">
+              <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Acquisition Requests</h5>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover" id="acquisitionTable">
+                    <thead>
+                      <tr>
+                        <th>Request ID</th>
+                        <th>Book Title</th>
+                        <th>Author</th>
+                        <th>Publisher</th>
+                        <th>Requested By</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="acquisitionTableBody">
+                      <!-- Acquisition requests will be populated by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transaction Module Content -->
+          <div id="transactionSection" class="content-section" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2 class="text-dark">Transaction Management</h2>
+              <div>
+                <button class="btn btn-outline-secondary me-2" onclick="exportTransactions()">
+                  <i class="fas fa-download me-1"></i> Export
+                </button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newTransactionModal">
+                  <i class="fas fa-plus me-1"></i> New Transaction
+                </button>
+              </div>
+            </div>
+            <!-- Transaction Table -->
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover" id="transactionsTable">
+                    <thead>
+                      <tr>
+                        <th>Transaction ID</th>
+                        <th>Member</th>
+                        <th>Book Title</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="transactionsTableBody">
+                      <!-- Transactions will be populated by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reports Section -->
+          <div id="reportsSection" class="content-section" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2 class="text-dark">Reports</h2>
+              <button class="btn btn-outline-secondary" onclick="exportReport()">
+                <i class="fas fa-download me-1"></i> Export
+              </button>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <p>Reports and analytics will be displayed here.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Members Section -->
+          <div id="membersSection" class="content-section" style="display: none;">
+            <div class="container py-4">
+              <h3 class="mb-3">Members</h3>
+              <button class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                <i class="fas fa-user-plus"></i> Add Member
+              </button>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="membersTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings Section -->
+          <div id="settingsSection" class="content-section" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2 class="text-dark">Settings</h2>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <p>Settings and configuration options will be available here.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <!-- Quick Add Modal -->
+  <div class="modal fade" id="quickAddModal" tabindex="-1" aria-labelledby="quickAddModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="quickAddModalLabel">Quick Add</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Select what you want to add quickly:</p>
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookModal">Add Book</button>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newAcquisitionModal">New Acquisition</button>
+            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#newTransactionModal">New Transaction</button>
+            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addMemberModal">Add Member</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add Book Modal -->
+  <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addBookModalLabel">Add New Book</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Add Book Form (fields can be added as needed) -->
+          <form id="addBookForm">
+            <div class="mb-3">
+              <label for="bookISBN" class="form-label">ISBN</label>
+              <input type="text" class="form-control" id="bookISBN" required>
+            </div>
+            <div class="mb-3">
+              <label for="bookTitle" class="form-label">Title</label>
+              <input type="text" class="form-control" id="bookTitle" required>
+            </div>
+            <div class="mb-3">
+              <label for="bookAuthor" class="form-label">Author</label>
+              <input type="text" class="form-control" id="bookAuthor" required>
+            </div>
+            <div class="mb-3">
+              <label for="bookCategory" class="form-label">Category</label>
+              <input type="text" class="form-control" id="bookCategory" required>
+            </div>
+            <div class="mb-3">
+              <label for="bookStatus" class="form-label">Status</label>
+              <select class="form-select" id="bookStatus" required>
+                <option value="Available">Available</option>
+                <option value="Borrowed">Borrowed</option>
+                <option value="Reserved">Reserved</option>
+                <option value="Maintenance">Maintenance</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="bookLocation" class="form-label">Location</label>
+              <input type="text" class="form-control" id="bookLocation" required>
+            </div>
+            <div class="mb-3">
+              <label for="bookAddedDate" class="form-label">Added Date</label>
+              <input type="date" class="form-control" id="bookAddedDate" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Book</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- New Acquisition Modal -->
+  <div class="modal fade" id="newAcquisitionModal" tabindex="-1" aria-labelledby="newAcquisitionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newAcquisitionModalLabel">New Acquisition Request</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- New Acquisition Form -->
+          <form id="addAcquisitionForm">
+            <div class="mb-3">
+              <label for="acqBookTitle" class="form-label">Book Title</label>
+              <input type="text" class="form-control" id="acqBookTitle" required>
+            </div>
+            <div class="mb-3">
+              <label for="acqAuthor" class="form-label">Author</label>
+              <input type="text" class="form-control" id="acqAuthor" required>
+            </div>
+            <div class="mb-3">
+              <label for="acqPublisher" class="form-label">Publisher</label>
+              <input type="text" class="form-control" id="acqPublisher" required>
+            </div>
+            <div class="mb-3">
+              <label for="acqRequestedBy" class="form-label">Requested By</label>
+              <input type="text" class="form-control" id="acqRequestedBy" required>
+            </div>
+            <div class="mb-3">
+              <label for="acqDate" class="form-label">Request Date</label>
+              <input type="date" class="form-control" id="acqDate" required>
+            </div>
+            <div class="mb-3">
+              <label for="acqStatus" class="form-label">Status</label>
+              <select class="form-select" id="acqStatus" required>
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Ordered">Ordered</option>
+                <option value="Received">Received</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success">Request Acquisition</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- New Transaction Modal -->
+  <div class="modal fade" id="newTransactionModal" tabindex="-1" aria-labelledby="newTransactionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newTransactionModalLabel">New Transaction</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- New Transaction Form -->
+          <form id="addTransactionForm">
+            <div class="mb-3">
+              <label for="transactionMember" class="form-label">Member</label>
+              <input type="text" class="form-control" id="transactionMember" required>
+            </div>
+            <div class="mb-3">
+              <label for="transactionBook" class="form-label">Book Title</label>
+              <input type="text" class="form-control" id="transactionBook" required>
+            </div>
+            <div class="mb-3">
+              <label for="transactionType" class="form-label">Type</label>
+              <select class="form-select" id="transactionType" required>
+                <option value="Borrow">Borrow</option>
+                <option value="Return">Return</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="transactionDate" class="form-label">Date</label>
+              <input type="date" class="form-control" id="transactionDate" required>
+            </div>
+            <div class="mb-3">
+              <label for="transactionDueDate" class="form-label">Due Date</label>
+              <input type="date" class="form-control" id="transactionDueDate" required>
+            </div>
+            <div class="mb-3">
+              <label for="transactionStatus" class="form-label">Status</label>
+              <select class="form-select" id="transactionStatus" required>
+                <option value="Active">Active</option>
+                <option value="Completed">Completed</option>
+                <option value="Overdue">Overdue</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-info">Add Transaction</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add Member Modal -->
+  <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addMemberModalLabel">Add Member</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Add Member Form -->
+          <form id="addMemberForm">
+            <div class="mb-3">
+              <label for="memberName" class="form-label">Name</label>
+              <input type="text" class="form-control" id="memberName" required>
+            </div>
+            <div class="mb-3">
+              <label for="memberEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="memberEmail" required>
+            </div>
+            <div class="mb-3">
+              <label for="memberPhone" class="form-label">Phone</label>
+              <input type="text" class="form-control" id="memberPhone" required>
+            </div>
+            <div class="mb-3">
+              <label for="memberStatus" class="form-label">Status</label>
+              <select class="form-select" id="memberStatus" required>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Banned">Banned</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-secondary">Add Member</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <!-- Font Awesome JS (optional for icons) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <!-- Custom JS for sidebar and section switching (placeholder) -->
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
