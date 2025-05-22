@@ -4,28 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Library System - Admin Dashboard</title>
-  
-  <!-- Bootstrap CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome for icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/dashboard.css">
-
 </head>
 <body>
   <div class="container-fluid p-0">
     <div class="row g-0">
-      <!-- Sidebar -->
       <nav id="sidebarMenu" class="sidebar d-md-block collapse">
         <div class="sidebar-sticky">
-          <div class="text-center mb-4 px-3">
+          <div class="text-center mb-4 px-3 mt-4">
             <div class="d-flex align-items-center justify-content-center mb-2">
               <i class="fas fa-book text-white fs-3 me-2"></i>
               <h5 class="text-white mb-0">Library System</h5>
             </div>
             <small class="text-white-50">Admin Dashboard</small>
           </div>
-          
           <ul class="nav flex-column">
             <li class="nav-item">
               <a class="nav-link" href="#" onclick="showSection('dashboard')">
@@ -58,78 +52,67 @@
           </ul>
         </div>
       </nav>
-      
-      <!-- Main Content -->
       <main class="main-content">
-        <!-- Top Navigation -->
         <nav class="navbar navbar-expand-lg top-navbar py-3">
           <div class="container-fluid">
-            <button class="navbar-toggler d-md-none" type="button" onclick="toggleSidebar()">
+            <button class="btn btn-outline-secondary d-md-none me-2" type="button" onclick="toggleSidebar()" aria-label="Open sidebar">
+              <i class="fas fa-bars"></i>
+            </button>
+            <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbarCollapse">
               <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="d-flex flex-grow-1 me-4">
-              <div class="input-group" style="max-width: 400px;">
-                <span class="input-group-text bg-white border-end-0">
-                  <i class="fas fa-search text-muted"></i>
-                </span>
-                <input type="text" class="form-control border-start-0" placeholder="Search books, members, transactions..." id="searchInput">
-              </div>
+            <div class="collapse navbar-collapse" id="topNavbarCollapse">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="#" onclick="showSection('reports')">
+                    <i class="fas fa-chart-line"></i> Reports
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" onclick="showSection('members')">
+                    <i class="fas fa-users"></i> Members
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" onclick="showSection('settings')">
+                    <i class="fas fa-cog"></i> Settings
+                  </a>
+                </li>
+                <li class="nav-item dropdown me-3">
+                  <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-bell fs-5"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6em;" id="notificationCount">
+                      5
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end" id="notificationDropdown">
+                    <li><h6 class="dropdown-header">Notifications</h6></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-exclamation-triangle text-warning me-2"></i>3 books overdue</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-user-plus text-info me-2"></i>New member registered</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-book text-success me-2"></i>New book acquired</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-center" href="#" onclick="clearNotifications()">Clear all</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                    <div class="user-avatar me-2">
+                      <span>LA</span>
+                    </div>
+                    <span class="d-none d-sm-inline">Librarian Admin</span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                  </ul>
+                </li>
+              </ul>
             </div>
-            <ul class="navbar-nav ms-auto">
-              
-                <a class="nav-link" href="#" onclick="showSection('reports')">
-                  <i class="fas fa-chart-line"></i> Reports
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#" onclick="showSection('members')">
-                  <i class="fas fa-users"></i> Members
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#" onclick="showSection('settings')">
-                  <i class="fas fa-cog"></i> Settings
-                </a>
-              </li>
-              <li class="nav-item dropdown me-3">
-                <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown">
-                  <i class="fas fa-bell fs-5"></i>
-                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6em;" id="notificationCount">
-                    5
-                  </span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" id="notificationDropdown">
-                  <li><h6 class="dropdown-header">Notifications</h6></li>
-                  <li><a class="dropdown-item" href="#"><i class="fas fa-exclamation-triangle text-warning me-2"></i>3 books overdue</a></li>
-                  <li><a class="dropdown-item" href="#"><i class="fas fa-user-plus text-info me-2"></i>New member registered</a></li>
-                  <li><a class="dropdown-item" href="#"><i class="fas fa-book text-success me-2"></i>New book acquired</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item text-center" href="#" onclick="clearNotifications()">Clear all</a></li>
-                </ul>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-                  <div class="user-avatar me-2">
-                    <span>LA</span>
-                  </div>
-                  <span class="d-none d-sm-inline">Librarian Admin</span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
-                  <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                </ul>
-              </li>
-              <li class="nav-item">
-            </ul>
-            
           </div>
         </nav>
-        
-        <!-- Page Content -->
         <div id="pageContent">
-          <!-- Dashboard Content -->
           <div id="dashboardSection" class="content-section">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <h2 class="text-dark">Library Dashboard</h2>
@@ -142,8 +125,6 @@
                 </button>
               </div>
             </div>
-            
-            <!-- Stats Row -->
             <div class="row">
               <div class="col-md-6 col-xl-3 mb-4">
                 <div class="card stat-card books">
@@ -161,7 +142,6 @@
                   </div>
                 </div>
               </div>
-              
               <div class="col-md-6 col-xl-3 mb-4">
                 <div class="card stat-card acquisition">
                   <div class="card-body">
@@ -178,7 +158,6 @@
                   </div>
                 </div>
               </div>
-              
               <div class="col-md-6 col-xl-3 mb-4">
                 <div class="card stat-card transaction">
                   <div class="card-body">
@@ -195,7 +174,6 @@
                   </div>
                 </div>
               </div>
-              
               <div class="col-md-6 col-xl-3 mb-4">
                 <div class="card stat-card overdue">
                   <div class="card-body">
@@ -213,39 +191,30 @@
                 </div>
               </div>
             </div>
-            
-            <!-- Charts and Calendar Row -->
             <div class="row">
               <div class="col-lg-8 mb-4">
                 <div class="card">
                   <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">Library Activity Overview</h5>
                     <div class="dropdown">
-                      <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                      <button id="activityPeriodBtn" class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         This Month
                       </button>
                       <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#" onclick="updateChart('today')">Today</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="updateChart('week')">This Week</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="updateChart('month')">This Month</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="updateChart('lastMonth')">Last Month</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateChart('today', 'Today')">Today</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateChart('week', 'This Week')">This Week</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateChart('month', 'This Month')">This Month</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateChart('lastMonth', 'Last Month')">Last Month</a></li>
                       </ul>
                     </div>
                   </div>
                   <div class="card-body">
                     <div class="chart-container" style="height: 300px; position: relative;">
-                      <div class="d-flex align-items-center justify-content-center bg-light" style="height: 100%; border-radius: 0.25rem;">
-                        <div class="text-center">
-                          <i class="fas fa-chart-line text-muted fs-1 mb-3"></i>
-                          <p class="text-muted">Borrowing & Return Activity Chart</p>
-                          <small class="text-muted">Chart will be updated based on selected period</small>
-                        </div>
-                      </div>
+                      <canvas id="activityChart" height="100"></canvas>
                     </div>
                   </div>
                 </div>
               </div>
-              
               <div class="col-lg-4 mb-4">
                 <div class="calendar-container">
                   <div class="calendar-header">
@@ -260,13 +229,10 @@
                     </div>
                   </div>
                   <div class="calendar-grid" id="calendarGrid">
-                    <!-- Calendar will be generated by JavaScript -->
                   </div>
                 </div>
               </div>
             </div>
-            
-            <!-- Recent Transactions Table -->
             <div class="row">
               <div class="col-12 mb-4">
                 <div class="card">
@@ -290,7 +256,6 @@
                           </tr>
                         </thead>
                         <tbody id="transactionTableBody">
-                          <!-- Transactions will be populated by JavaScript -->
                         </tbody>
                       </table>
                     </div>
@@ -299,8 +264,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Books Module Content -->
           <div id="booksSection" class="content-section" style="display: none;">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <h2 class="text-dark">Books Management</h2>
@@ -313,8 +276,6 @@
                 </button>
               </div>
             </div>
-            
-            <!-- Books Search and Filter -->
             <div class="row mb-4">
               <div class="col-md-6">
                 <div class="input-group">
@@ -342,8 +303,6 @@
                 </select>
               </div>
             </div>
-            
-            <!-- Books Table -->
             <div class="card">
               <div class="card-body">
                 <div class="table-responsive">
@@ -361,15 +320,12 @@
                       </tr>
                     </thead>
                     <tbody id="booksTableBody">
-                      <!-- Books will be populated by JavaScript -->
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- Acquisition Module Content -->
           <div id="acquisitionSection" class="content-section" style="display: none;">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <h2 class="text-dark">Acquisition Management</h2>
@@ -382,8 +338,6 @@
                 </button>
               </div>
             </div>
-            
-            <!-- Acquisition Stats -->
             <div class="row mb-4">
               <div class="col-md-3">
                 <div class="card text-center">
@@ -418,8 +372,6 @@
                 </div>
               </div>
             </div>
-            
-            <!-- Acquisition Requests Table -->
             <div class="card">
               <div class="card-header bg-white">
                 <h5 class="card-title mb-0">Acquisition Requests</h5>
@@ -440,15 +392,12 @@
                       </tr>
                     </thead>
                     <tbody id="acquisitionTableBody">
-                      <!-- Acquisition requests will be populated by JavaScript -->
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- Transaction Module Content -->
           <div id="transactionSection" class="content-section" style="display: none;">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <h2 class="text-dark">Transaction Management</h2>
@@ -461,7 +410,6 @@
                 </button>
               </div>
             </div>
-            <!-- Transaction Table -->
             <div class="card">
               <div class="card-body">
                 <div class="table-responsive">
@@ -479,15 +427,12 @@
                       </tr>
                     </thead>
                     <tbody id="transactionsTableBody">
-                      <!-- Transactions will be populated by JavaScript -->
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- Reports Section -->
           <div id="reportsSection" class="content-section" style="display: none;">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <h2 class="text-dark">Reports</h2>
@@ -501,8 +446,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Members Section -->
           <div id="membersSection" class="content-section" style="display: none;">
             <div class="container py-4">
               <h3 class="mb-3">Members</h3>
@@ -526,8 +469,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Settings Section -->
           <div id="settingsSection" class="content-section" style="display: none;">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <h2 class="text-dark">Settings</h2>
@@ -542,9 +483,6 @@
       </main>
     </div>
   </div>
-
-  <!-- Modals -->
-  <!-- Quick Add Modal -->
   <div class="modal fade" id="quickAddModal" tabindex="-1" aria-labelledby="quickAddModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -564,7 +502,6 @@
       </div>
     </div>
   </div>
-  <!-- Add Book Modal -->
   <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -573,7 +510,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <!-- Add Book Form (fields can be added as needed) -->
           <form id="addBookForm">
             <div class="mb-3">
               <label for="bookISBN" class="form-label">ISBN</label>
@@ -614,7 +550,6 @@
       </div>
     </div>
   </div>
-  <!-- New Acquisition Modal -->
   <div class="modal fade" id="newAcquisitionModal" tabindex="-1" aria-labelledby="newAcquisitionModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -623,7 +558,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <!-- New Acquisition Form -->
           <form id="addAcquisitionForm">
             <div class="mb-3">
               <label for="acqBookTitle" class="form-label">Book Title</label>
@@ -660,7 +594,6 @@
       </div>
     </div>
   </div>
-  <!-- New Transaction Modal -->
   <div class="modal fade" id="newTransactionModal" tabindex="-1" aria-labelledby="newTransactionModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -669,7 +602,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <!-- New Transaction Form -->
           <form id="addTransactionForm">
             <div class="mb-3">
               <label for="transactionMember" class="form-label">Member</label>
@@ -708,7 +640,6 @@
       </div>
     </div>
   </div>
-  <!-- Add Member Modal -->
   <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -717,7 +648,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <!-- Add Member Form -->
           <form id="addMemberForm">
             <div class="mb-3">
               <label for="memberName" class="form-label">Name</label>
@@ -745,12 +675,10 @@
       </div>
     </div>
   </div>
-
-  <!-- Bootstrap JS and dependencies -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-  <!-- Font Awesome JS (optional for icons) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-  <!-- Custom JS for sidebar and section switching (placeholder) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="js/dashboard.js"></script>
+  <div class="sidebar-backdrop d-md-none" onclick="toggleSidebar()"></div>
 </body>
 </html>
