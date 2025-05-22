@@ -109,13 +109,32 @@ const transactions = [
   }
 ];
 
-const members = [];
+const members = [
+  {
+    name: "Bob",
+    email: "bob@example.com",
+    phone: "09171234567",
+    status: "Active"
+  },
+  {
+    name: "Alice",
+    email: "alice@example.com",
+    phone: "09179876543",
+    status: "Active"
+  },
+  {
+    name: "Edgar",
+    email: "edgar@example.com",
+    phone: "09170001111",
+    status: "Active"
+  }
+];
 
 function populateBooksTable() {
   const tbody = document.getElementById('booksTableBody');
   if (!tbody) return;
   tbody.innerHTML = '';
-  books.forEach(book => {
+  books.forEach((book, i) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${book.isbn}</td>
@@ -126,9 +145,9 @@ function populateBooksTable() {
       <td>${book.location}</td>
       <td>${book.addedDate}</td>
       <td>
-        <button class="btn btn-sm btn-info me-1">View</button>
-        <button class="btn btn-sm btn-warning me-1">Edit</button>
-        <button class="btn btn-sm btn-danger">Delete</button>
+        <button class="btn btn-sm btn-info me-1" onclick="viewBook(${i})">View</button>
+        <button class="btn btn-sm btn-warning me-1" onclick="editBook(${i})">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteBook(${i})">Delete</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -139,7 +158,7 @@ function populateAcquisitionTable() {
   const tbody = document.getElementById('acquisitionTableBody');
   if (!tbody) return;
   tbody.innerHTML = '';
-  acquisitions.forEach(acq => {
+  acquisitions.forEach((acq, i) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${acq.id}</td>
@@ -150,9 +169,9 @@ function populateAcquisitionTable() {
       <td>${acq.date}</td>
       <td>${acq.status}</td>
       <td>
-        <button class="btn btn-sm btn-info me-1">View</button>
-        <button class="btn btn-sm btn-warning me-1">Edit</button>
-        <button class="btn btn-sm btn-danger">Delete</button>
+        <button class="btn btn-sm btn-info me-1" onclick="viewAcquisition(${i})">View</button>
+        <button class="btn btn-sm btn-warning me-1" onclick="editAcquisition(${i})">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteAcquisition(${i})">Delete</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -163,7 +182,7 @@ function populateTransactionsTable() {
   const tbody = document.getElementById('transactionsTableBody');
   if (!tbody) return;
   tbody.innerHTML = '';
-  transactions.forEach(tx => {
+  transactions.forEach((tx, i) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${tx.id}</td>
@@ -174,9 +193,9 @@ function populateTransactionsTable() {
       <td>${tx.dueDate}</td>
       <td>${tx.status}</td>
       <td>
-        <button class="btn btn-sm btn-info me-1">View</button>
-        <button class="btn btn-sm btn-warning me-1">Edit</button>
-        <button class="btn btn-sm btn-danger">Delete</button>
+        <button class="btn btn-sm btn-info me-1" onclick="viewTransaction(${i})">View</button>
+        <button class="btn btn-sm btn-warning me-1" onclick="editTransaction(${i})">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteTransaction(${i})">Delete</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -187,18 +206,18 @@ function populateMembersTable() {
   const tbody = document.getElementById('membersTableBody');
   if (!tbody) return;
   tbody.innerHTML = '';
-  members.forEach((member, idx) => {
+  members.forEach((member, i) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${idx + 1}</td>
+      <td>${i + 1}</td>
       <td>${member.name}</td>
       <td>${member.email}</td>
       <td>${member.phone}</td>
       <td>${member.status}</td>
       <td>
-        <button class="btn btn-sm btn-info me-1">View</button>
-        <button class="btn btn-sm btn-warning me-1">Edit</button>
-        <button class="btn btn-sm btn-danger">Delete</button>
+        <button class="btn btn-sm btn-info me-1" onclick="viewMember(${i})">View</button>
+        <button class="btn btn-sm btn-warning me-1" onclick="editMember(${i})">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteMember(${i})">Delete</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -572,3 +591,63 @@ window.updateChart = function(period, label) {
     document.getElementById('activityPeriodBtn').textContent = label;
   }
 };
+
+function viewBook(index) {
+  const book = books[index];
+  alert(`Book Details:\nTitle: ${book.title}\nAuthor: ${book.author}\nCategory: ${book.category}\nStatus: ${book.status}\nLocation: ${book.location}\nAdded: ${book.addedDate}`);
+}
+function editBook(index) {
+  alert('Edit Book: ' + books[index].title);
+  // You can open a modal and prefill the form here
+}
+function deleteBook(index) {
+  if (confirm('Are you sure you want to delete this book?')) {
+    books.splice(index, 1);
+    populateBooksTable();
+    updateDashboard();
+  }
+}
+
+function viewAcquisition(index) {
+  const acq = acquisitions[index];
+  alert(`Acquisition Request:\nTitle: ${acq.title}\nAuthor: ${acq.author}\nPublisher: ${acq.publisher}\nRequested By: ${acq.requestedBy}\nDate: ${acq.date}\nStatus: ${acq.status}`);
+}
+function editAcquisition(index) {
+  alert('Edit Acquisition: ' + acquisitions[index].title);
+}
+function deleteAcquisition(index) {
+  if (confirm('Are you sure you want to delete this acquisition request?')) {
+    acquisitions.splice(index, 1);
+    populateAcquisitionTable();
+    updateDashboard();
+  }
+}
+
+function viewTransaction(index) {
+  const tx = transactions[index];
+  alert(`Transaction:\nMember: ${tx.member}\nBook: ${tx.book}\nType: ${tx.type}\nDate: ${tx.date}\nDue: ${tx.dueDate}\nStatus: ${tx.status}`);
+}
+function editTransaction(index) {
+  alert('Edit Transaction for: ' + transactions[index].book);
+}
+function deleteTransaction(index) {
+  if (confirm('Are you sure you want to delete this transaction?')) {
+    transactions.splice(index, 1);
+    populateTransactionsTable();
+    updateDashboard();
+  }
+}
+
+function viewMember(index) {
+  const member = members[index];
+  alert(`Member:\nName: ${member.name}\nEmail: ${member.email}\nPhone: ${member.phone}\nStatus: ${member.status}`);
+}
+function editMember(index) {
+  alert('Edit Member: ' + members[index].name);
+}
+function deleteMember(index) {
+  if (confirm('Are you sure you want to delete this member?')) {
+    members.splice(index, 1);
+    populateMembersTable();
+  }
+}
