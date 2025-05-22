@@ -1,7 +1,16 @@
-function toggleSidebar() {
-      document.getElementById('sidebarMenu').classList.toggle('show');
-    }
-    function showSection(section) {
+function toggleSidebar(forceClose = false) {
+  const sidebar = document.getElementById('sidebarMenu');
+  const backdrop = document.querySelector('.sidebar-backdrop');
+  if (forceClose) {
+    sidebar.classList.remove('show');
+    backdrop.style.display = 'none';
+    return;
+  }
+  const isOpen = sidebar.classList.toggle('show');
+  backdrop.style.display = isOpen ? 'block' : 'none';
+}
+
+function showSection(section) {
       const sections = [
         'dashboard', 'books', 'acquisition', 'transaction', 'reports', 'members', 'settings'
       ];
@@ -9,11 +18,9 @@ function toggleSidebar() {
         const el = document.getElementById(s + 'Section');
         if (el) el.style.display = (s === section) ? '' : 'none';
       });
-      // Update sidebar active state
       document.querySelectorAll('.sidebar .nav-link').forEach(link => {
         link.classList.toggle('active', link.getAttribute('data-section') === section);
       });
-      // Populate books table when books section is shown
       if (section === 'dashboard') updateDashboard();
       if (section === 'books') populateBooksTable();
       if (section === 'acquisition') populateAcquisitionTable();
@@ -21,7 +28,6 @@ function toggleSidebar() {
       if (section === 'members') populateMembersTable();
     }
 
-    // Sample book data
 const books = [
   {
     isbn: "978-0140449136",
@@ -61,7 +67,6 @@ const books = [
   }
 ];
 
-// Sample acquisition requests
 const acquisitions = [
   {
     id: 1,
@@ -83,7 +88,6 @@ const acquisitions = [
   }
 ];
 
-// Sample transactions
 const transactions = [
   {
     id: 1,
@@ -107,7 +111,6 @@ const transactions = [
 
 const members = [];
 
-// Function to populate books table
 function populateBooksTable() {
   const tbody = document.getElementById('booksTableBody');
   if (!tbody) return;
@@ -132,7 +135,6 @@ function populateBooksTable() {
   });
 }
 
-// Populate acquisition table
 function populateAcquisitionTable() {
   const tbody = document.getElementById('acquisitionTableBody');
   if (!tbody) return;
@@ -157,7 +159,6 @@ function populateAcquisitionTable() {
   });
 }
 
-// Populate transactions table
 function populateTransactionsTable() {
   const tbody = document.getElementById('transactionsTableBody');
   if (!tbody) return;
@@ -204,24 +205,17 @@ function populateMembersTable() {
   });
 }
 
-// Update dashboard stats
 function updateDashboardStats() {
-  // Total Books
   document.getElementById('totalBooks').textContent = books.length;
-  // New Acquisitions (for demo: count all acquisitions)
   document.getElementById('newAcquisitions').textContent = acquisitions.length;
-  // Active Loans (for demo: count transactions with status "Active")
   document.getElementById('activeLoans').textContent = transactions.filter(tx => tx.status === "Active").length;
-  // Overdue Books (for demo: count transactions with status "Overdue")
   document.getElementById('overdueBooks').textContent = transactions.filter(tx => tx.status === "Overdue").length;
 }
 
-// Update recent transactions table on dashboard
 function updateRecentTransactionsTable() {
   const tbody = document.getElementById('transactionTableBody');
   if (!tbody) return;
   tbody.innerHTML = '';
-  // Show the 5 most recent transactions
   const recent = [...transactions].reverse().slice(0, 5);
   recent.forEach(tx => {
     const tr = document.createElement('tr');
@@ -243,53 +237,45 @@ function updateRecentTransactionsTable() {
   });
 }
 
-// Call this to update dashboard content
 function updateDashboard() {
   updateDashboardStats();
   updateRecentTransactionsTable();
 }
 
-// Show dashboard by default
 window.addEventListener('DOMContentLoaded', () => {
   showSection('dashboard');
   renderCalendar(window.currentDate);
   updateDashboard();
 });
 
-    function logout() {
-      alert('Logging out...');
-      // Redirect or perform logout logic here
-    }
-    function exportReport() {
-      alert('Exporting report...');
-    }
-    function exportBooks() {
-      alert('Exporting books...');
-    }
-    function exportAcquisitions() {
-      alert('Exporting acquisitions...');
-    }
-    function exportTransactions() {
-      alert('Exporting transactions...');
-    }
-    function clearNotifications() {
-      document.getElementById('notificationCount').innerText = '0';
-      document.getElementById('notificationDropdown').innerHTML = '<li><h6 class="dropdown-header">No new notifications</h6></li>';
-    }
-    // Add more JS as needed for calendar, tables, etc.
-
-    // Simple calendar rendering logic
+function logout() {
+  alert('Logging out...');
+}
+function exportReport() {
+  alert('Exporting report...');
+}
+function exportBooks() {
+  alert('Exporting books...');
+}
+function exportAcquisitions() {
+  alert('Exporting acquisitions...');
+}
+function exportTransactions() {
+  alert('Exporting transactions...');
+}
+function clearNotifications() {
+  document.getElementById('notificationCount').innerText = '0';
+  document.getElementById('notificationDropdown').innerHTML = '<li><h6 class="dropdown-header">No new notifications</h6></li>';
+}
 
 const calendarMonth = document.getElementById('calendarMonth');
 const calendarGrid = document.getElementById('calendarGrid');
 
 let currentDate = new Date();
 
-// Example transactions with due dates (YYYY-MM-DD)
 const exampleTransactions = [
   { id: 1, title: "Return: The Great Gatsby", dueDate: "2025-05-25" },
-  { id: 2, title: "Return: 1984", dueDate: "2025-05-28" },
-  // Add more as needed
+  { id: 2, title: "Return: 1984", dueDate: "2025-05-28" }
 ];
 
 function renderCalendar(date = new Date()) {
@@ -312,7 +298,6 @@ function renderCalendar(date = new Date()) {
 
   calendarGrid.innerHTML = '';
 
-  // Day headers
   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
     const header = document.createElement('div');
     header.className = 'calendar-day header';
@@ -320,7 +305,6 @@ function renderCalendar(date = new Date()) {
     calendarGrid.appendChild(header);
   });
 
-  // Blanks before 1st
   for (let i = 0; i < firstDay; i++) {
     const blank = document.createElement('div');
     blank.className = 'calendar-day';
@@ -329,14 +313,12 @@ function renderCalendar(date = new Date()) {
     calendarGrid.appendChild(blank);
   }
 
-  // Days
   for (let d = 1; d <= daysInMonth; d++) {
     const dayDiv = document.createElement('div');
     dayDiv.className = 'calendar-day';
     const thisDate = new Date(year, month, d);
     const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
 
-    // Highlight today
     if (
       d === today.getDate() &&
       month === today.getMonth() &&
@@ -345,7 +327,6 @@ function renderCalendar(date = new Date()) {
       dayDiv.classList.add('today');
     }
 
-    // Events
     const events = transactions.filter(t => t.dueDate === dateStr);
     if (events.length > 0) {
       dayDiv.classList.add('has-events');
@@ -362,7 +343,6 @@ function renderCalendar(date = new Date()) {
   }
 }
 
-// Calendar navigation
 function previousMonth() {
   window.currentDate.setMonth(window.currentDate.getMonth() - 1);
   renderCalendar(window.currentDate);
@@ -372,13 +352,11 @@ function nextMonth() {
   renderCalendar(window.currentDate);
 }
 
-// Initialize calendar
 window.currentDate = new Date();
 window.addEventListener('DOMContentLoaded', () => {
   renderCalendar(window.currentDate);
 });
 
-// Listen for Add Book form submission
 document.addEventListener('DOMContentLoaded', function() {
   const addBookForm = document.getElementById('addBookForm');
   if (addBookForm) {
@@ -405,7 +383,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Listen for Add Acquisition form submission
   const addAcquisitionForm = document.getElementById('addAcquisitionForm');
   if (addAcquisitionForm) {
     addAcquisitionForm.addEventListener('submit', function(e) {
@@ -430,7 +407,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Listen for Add Transaction form submission
   const addTransactionForm = document.getElementById('addTransactionForm');
   if (addTransactionForm) {
     addTransactionForm.addEventListener('submit', function(e) {
@@ -455,7 +431,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Listen for Add Member form submission
   const addMemberForm = document.getElementById('addMemberForm');
   if (addMemberForm) {
     addMemberForm.addEventListener('submit', function(e) {
@@ -476,3 +451,124 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+let activityChart;
+
+function getActivityData(period = 'month') {
+  const now = new Date();
+  let labels = [];
+  let borrows = [];
+  let returns = [];
+
+  if (period === 'today') {
+    labels = Array.from({length: 24}, (_, i) => `${i}:00`);
+    borrows = Array(24).fill(0);
+    returns = Array(24).fill(0);
+    transactions.forEach(t => {
+      const date = new Date(t.date);
+      if (date.toDateString() === now.toDateString()) {
+        const hour = date.getHours();
+        if (t.type === 'Borrow') borrows[hour]++;
+        if (t.type === 'Return') returns[hour]++;
+      }
+    });
+  } else if (period === 'week') {
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    labels = [];
+    borrows = Array(7).fill(0);
+    returns = Array(7).fill(0);
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(now.getDate() - i);
+      labels.push(days[d.getDay()]);
+    }
+    transactions.forEach(t => {
+      const date = new Date(t.date);
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        if (date.toDateString() === d.toDateString()) {
+          const idx = 6 - i;
+          if (t.type === 'Borrow') borrows[idx]++;
+          if (t.type === 'Return') returns[idx]++;
+        }
+      }
+    });
+  } else if (period === 'lastMonth' || period === 'month') {
+    const d = new Date(now);
+    let month = d.getMonth();
+    let year = d.getFullYear();
+    if (period === 'lastMonth') {
+      month = month === 0 ? 11 : month - 1;
+      if (month === 11) year--;
+    }
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    labels = Array.from({length: daysInMonth}, (_, i) => `${i+1}`);
+    borrows = Array(daysInMonth).fill(0);
+    returns = Array(daysInMonth).fill(0);
+    transactions.forEach(t => {
+      const date = new Date(t.date);
+      if (date.getMonth() === month && date.getFullYear() === year) {
+        const day = date.getDate() - 1;
+        if (t.type === 'Borrow') borrows[day]++;
+        if (t.type === 'Return') returns[day]++;
+      }
+    });
+  }
+  return { labels, borrows, returns };
+}
+
+function renderActivityChart(period = 'month') {
+  const ctx = document.getElementById('activityChart').getContext('2d');
+  const { labels, borrows, returns } = getActivityData(period);
+
+  if (activityChart) activityChart.destroy();
+
+  activityChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Borrows',
+          data: borrows,
+          borderColor: '#0d6efd',
+          backgroundColor: 'rgba(13,110,253,0.1)',
+          tension: 0.3,
+          fill: true,
+        },
+        {
+          label: 'Returns',
+          data: returns,
+          borderColor: '#198754',
+          backgroundColor: 'rgba(25,135,84,0.1)',
+          tension: 0.3,
+          fill: true,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true },
+        title: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
+
+// Call this on page load
+document.addEventListener('DOMContentLoaded', function() {
+  renderActivityChart('month');
+});
+
+// Update chart when dropdown is used
+window.updateChart = function(period, label) {
+  renderActivityChart(period);
+  if (label) {
+    document.getElementById('activityPeriodBtn').textContent = label;
+  }
+};
